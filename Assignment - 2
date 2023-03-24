@@ -67,3 +67,26 @@ public:
         return v;
     }
 };
+
+
+/* 912
+Given an array of integers nums, sort the array in ascending order and return it.
+You must solve the problem without using any built-in functions in O(nlog(n)) time complexity and with the smallest space complexity possible.
+*/
+void quickSort(vector<int>& nums, int low, int high) {
+    if (low < high) {
+        int pivot = nums[high];
+        int i = low - 1;
+        for (int j = low; j <= high - 1; j++) {
+            if (nums[j] < pivot) {
+                i++;
+                swap(nums[i], nums[j]);
+            }
+        }
+        swap(nums[i + 1], nums[high]);
+        int p = i + 1;
+        quickSort(nums, low, p - 1);
+        quickSort(nums, p + 1, high);
+    }
+}
+
