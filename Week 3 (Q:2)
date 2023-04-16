@@ -4,49 +4,51 @@ Input Format: The first line contains number of test cases, T. For each test cas
 Output Format: The output will have T number of lines. For each test case T, there will be three output lines. First line will give the sorted array. Second line will give total number of comparisons. Third line will give total number of swaps required.
 */
 #include<iostream>
+#include<math.h>
 using namespace std;
-
-void selectionsort(int arr[],int array_size)
+void selectionsort(int a[],int n,int &shift,int &comparisons)
 {
-    int min,i,j,temp,swaps=0,comparisons=0;
-    for(i=0;i<array_size-1;i++)
+    int i,j,min=0;
+    for(i=0;i<n-1;i++)
     {
         min=i;
-        for(j=i+1;j<array_size;j++)
+        for(j=i+1;j<n;j++)
         {
             comparisons++;
-            if(arr[j]<arr[min])
+            if(a[j]<a[min])
             {
                 min=j;
             }
         }
-        temp=arr[min];
-        arr[min]=arr[i];
-        arr[i]=temp;
-        swaps++;
-    }
-    for(i=0;i<array_size;i++)
+    if(min!=i)
     {
-        cout<<arr[i]<<endl;
+        swap(a[i],a[min]);
     }
-    cout<<"Swaps = "<<swaps<<endl<<"Comparisons = "<<comparisons<<endl;
+    shift++;
+    }
 }
-
 int main()
 {
-    int arr[10],array_size,testcase,i,j;
-    cout<<"Input number of test cases"<<endl;
-    cin>>testcase;
-    while(testcase--){
-        cout<<"Input array size"<<endl;
-        cin>>array_size;
-        cout<<"Input array elements"<<endl;
-        for(i=0;i<array_size;i++)
+    int n,i,t,key,shift=0,comparisons=0;
+    cout<<"Input no of test cases"<<endl;
+    cin>>t;
+    while(t--)
+    {
+        cout<<"Input size of array"<<endl;
+        cin>>n;
+        int a[n];
+        cout<<"Input elements in an array"<<endl;
+        for(i=0;i<n;i++)
         {
-            cin>>arr[i];
+            cin>>a[i];
         }
-        selectionsort(arr,array_size);
+        selectionsort(a,n,shift,comparisons);
+        for(i=0;i<n;i++)
+        {
+            cout<<a[i]<<"\t";
+        }
+        cout<<endl;
+        cout<<"Shifts = "<<shift<<endl<<"Comparisons = "<<comparisons<<endl;
     }
-    return 0;
 }
 
