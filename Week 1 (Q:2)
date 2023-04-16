@@ -3,12 +3,13 @@ Given an already sorted array of positive integers, design an algorithm and impl
 */
 #include<iostream>
 using namespace std;
-int binarysearch(int a[],int n,int key)
+int binarysearch(int a[],int n,int key,int&c)
 {
-    int mid=0,l=0,u=n-1,c=0;
-    while(l<u)
+    int mid=0,l=0,u=n-1;
+    while(l<=u)
     {
         mid=(l+u)/2;
+        c++;
         if(a[mid]==key)
             return mid;
         else if(a[mid]>key)
@@ -35,12 +36,13 @@ int main()
         }
         cout<<"Input key to search"<<endl;
         cin>>key;
-        index=binarysearch(a,n,key);
+        int c=0;
+        index=binarysearch(a,n,key,c);
         if(index==-1)
-            cout<<"Not present"<<endl<<n<<endl;
+            cout<<"Not present"<<endl<<c<<endl;
         else
         {
-            cout<<"Present "<<index+1<<endl;
+            cout<<"Present "<<c<<endl;
         }
     }
 }
