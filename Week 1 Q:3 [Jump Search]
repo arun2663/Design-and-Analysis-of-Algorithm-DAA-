@@ -1,52 +1,49 @@
 /*
 Given an already sorted array of positive integers, design an algorithm and implement it using a program to find whether a given key element is present in the sorted array or not. For an array arr[n], search at the indexes arr[0], arr[2], arr[4],.....,arr[2k] and so on. Once the interval (arr[2k] < key < arr[ 2k+1] ) is found, perform a linear search operation from the index 2k to find the element key. (Complexity < O(n), where n is the number of elements need to be scanned for searching)
 */
-#include <iostream>
-#include <cmath>
-
+#include<iostream>
 using namespace std;
-
-int jumpsearch(int a[], int c, int num)
+int binarysearch(int a[],int n,int key,int&c)
 {
-    int start = 0, ending = sqrt(c), i;
-    while (a[ending] <= num && ending < c)
+    int mid=0,l=0,u=n-1;
+    while(l<=u)
+    {
+        mid=(l+u)/2;
+        c++;
+        if(a[mid]==key)
+            return mid;
+        else if(a[mid]>key)
+            u=mid-1;
+        else if(a[mid]<key)
+            l=mid+1;
+    }
+    return -1;
+}
+int main()
+{
+    int n,i,t,key,index=0;
+    cout<<"Input no of test cases"<<endl;
+    cin>>t;
+    while(t--)
+    {
+        cout<<"Input size of array"<<endl;
+        cin>>n;
+        int a[n];
+        cout<<"Input elements in an array"<<endl;
+        for(i=0;i<n;i++)
         {
-        start = ending;
-        ending += sqrt(c);
-        if (ending > c - 1)
+            cin>>a[i];
+        }
+        cout<<"Input key to search"<<endl;
+        cin>>key;
+        int c=0;
+        index=binarysearch(a,n,key,c);
+        if(index==-1)
+            cout<<"Not present"<<endl<<c<<endl;
+        else
         {
-            ending = c;
+            cout<<"Present "<<c<<endl;
         }
     }
-    for (i = start; i < ending; i++) {
-        if (a[i] == num) {
-            return i;
-        }
-    }
-    return start;
 }
 
-int main() {
-    int a[100], b, c, i, j, num;
-    cout << "Input number of test cases: " << endl;
-    cin >> b;
-    for (i = 0; i < b; i++) {
-        cout << "Input number of elements in array: " << endl;
-        cin >> c;
-        cout << "Input sorted elements in array: " << endl;
-        for (j = 0; j < c; j++) {
-            cin >> a[j];
-        }
-        cout << "Input element to search: " << endl;
-        cin >> num;
-        int res = jumpsearch(a, c, num);
-        if (res == c) {
-            cout << "Not Present. It would be inserted at index " << res << endl;
-        } else if (a[res] == num) {
-            cout << "Present at index " << res << endl;
-        } else {
-            cout << "Not Present. It would be inserted at index " << res << endl;
-        }
-    }
-    return 0;
-}
