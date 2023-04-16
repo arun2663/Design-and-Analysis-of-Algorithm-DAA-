@@ -3,16 +3,17 @@ Given an unsorted array of positive integers, design an algorithm and implement 
 Input Format: The first line contains number of test cases, T. For each test case, there will be two input lines. First line contains n (the size of array). Second line contains space-separated integers describing array.
 Output Format: The output will have T number of lines. For each test case, output will be 'YES' if duplicates are present otherwise ‘NO’.
 */
-#include <iostream>
-#include<algorithm>
+#include<iostream>
+#include<math.h>
+#include<bits/stdc++.h>
 using namespace std;
-
-int hasDuplicates(int arr[], int array_size)
+bool duplicates(int a[],int n)
 {
-    sort(arr,arr+array_size);
-    for (int i=0;i<array_size-1;i++)
+    sort(a,a+n);
+    int c=0;
+    for(int i=0;i<n-1;i++)
     {
-        if (arr[i] == arr[i+1])
+        if(a[i]==a[i+1])
         {
             return true;
         }
@@ -21,24 +22,23 @@ int hasDuplicates(int arr[], int array_size)
 }
 int main()
 {
-    int arr[10],array_size,testcase,i,j;
-    cout<<"Input number of test cases"<<endl;
-    cin>>testcase;
-    while(testcase--){
-        cout<<"Input array size"<<endl;
-        cin>>array_size;
-        cout<<"Input array elements"<<endl;
-        for(i=0;i<array_size;i++)
+    int n,i,t,key,shift=0,comparisons=0;
+    cout<<"Input no of test cases"<<endl;
+    cin>>t;
+    while(t--)
+    {
+        cout<<"Input size of array"<<endl;
+        cin>>n;
+        int a[n];
+        cout<<"Input elements in an array"<<endl;
+        for(i=0;i<n;i++)
         {
-            cin>>arr[i];
+            cin>>a[i];
         }
-    if(hasDuplicates(arr,array_size))
-    {
-        cout <<"YES"<< endl;
-    } else
-    {
-        cout <<"NO"<< endl;
+        if(duplicates(a,n))
+            cout<<"Yes"<<endl;
+        else
+            cout<<"No"<<endl;
     }
-    }
-    return 0;
 }
+
