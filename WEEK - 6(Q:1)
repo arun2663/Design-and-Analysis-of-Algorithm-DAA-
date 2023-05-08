@@ -22,11 +22,12 @@ void dfs(vector<vector<int>>& graph, int source, int destination, vector<bool>& 
 }
 
 int main() {
-    int n; // number of vertices in the graph
+    int n;
+    cout << "Enter the number of nodes: ";
     cin >> n;
 
-    // reading the graph as adjacency list
     vector<vector<int>> graph(n, vector<int>());
+    cout << "Enter the adjacency matrix:" << endl;
     for (int i = 0; i < n; i++) {
         string row;
         cin >> row;
@@ -38,6 +39,7 @@ int main() {
     }
 
     int source, destination;
+    cout << "Enter the source and destination nodes (1-based indexing): ";
     cin >> source >> destination;
 
     vector<bool> visited(n, false);
@@ -46,10 +48,12 @@ int main() {
     dfs(graph, source - 1, destination - 1, visited, pathExists);
 
     if (pathExists) {
-        cout << "Yes Path Exists" << endl;
+        cout << "Yes, a path exists between node " << source << " and node " << destination << "." << endl;
     } else {
-        cout << "No Such Path Exists" << endl;
+        cout << "No, there is no path between node " << source << " and node " << destination << "." << endl;
     }
 
     return 0;
 }
+
+
