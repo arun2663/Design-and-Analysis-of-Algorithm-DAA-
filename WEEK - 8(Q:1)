@@ -1,0 +1,76 @@
+/*
+Assume that a project of road construction to connect some cities is given to your friend. Map of these cities and roads which will connect them (after construction) is provided to him in the form of a graph. Certain amount of rupees is associated with construction of each road. Your friend has to calculate the minimum budget required for this project. The budget should be designed in such a way that the cost of connecting the cities should be minimum and number of roads required to connect all the cities should be minimum (if there are N cities then only N-1 roads need to be constructed). He asks you for help. Now, you have to help your friend by designing an algorithm which will find minimum cost required to connect these cities. (use Prim's algorithm). Give code in cpp
+*/
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <climits>
+
+using namespace std;
+
+// Structure to represent a city and its associated cost
+struct City {
+    int id;
+    int cost;
+
+    City(int _id, int _cost) : id(_id), cost(_cost) {}
+
+    bool operator<(const City& other) const {
+        return cost > other.cost; // Used for min-heap
+    }
+};
+
+// Function to find the minimum cost using Prim's algorithm
+int findMinimumCost(const vector<vector<int>>& graph) {
+    int numCities = graph.size();
+    vector<bool> visited(numCities, false);
+    vector<int> costs(numCities, INT_MAX);
+
+    priority_queue<City> pq;
+    pq.push(City(0, 0)); // Start from the first city with cost 0
+
+    int minimumCost = 0;
+
+    while (!pq.empty()) {
+        City current = pq.top();
+        pq.pop();
+
+        int cityId = current.id;
+        if (visited[cityId]) {
+            continue; // Skip if the city has already been visited
+        }
+
+        visited[cityId] = true;
+        minimumCost += current.cost;
+
+        // Update the costs of neighboring cities
+        for (int neighbor = 0; neighbor < numCities; ++neighbor) {
+            if (!visited[neighbor] && graph[cityId][neighbor] != 0 && graph[cityId][neighbor] < costs[neighbor]) {
+                costs[neighbor] = graph[cityId][neighbor];
+                pq.push(City(neighbor, graph[cityId][neighbor]));
+            }
+        }
+    }
+
+    return minimumCost;
+}
+
+int main() {
+    int numCities;
+    cout << "Enter the number of cities: ";
+    cin >> numCities;
+
+    vector<vector<int>> graph(numCities, vector<int>(numCities, 0));
+
+    cout << "Enter the cost of connecting each city (0 if not connected):\n";
+    for (int i = 0; i < numCities; ++i) {
+        for (int j = 0; j < numCities; ++j) {
+            cin >> graph[i][j];
+        }
+    }
+
+    int minimumCost = findMinimumCost(graph);
+    cout << "Minimum cost required to connect the cities: " << minimumCost << endl;
+
+    return 0;
+}
