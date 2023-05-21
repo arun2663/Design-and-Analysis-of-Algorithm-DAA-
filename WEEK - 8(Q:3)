@@ -3,102 +3,120 @@ Assume that same road construction project is given to another person. The amoun
 */
 #include <iostream>
 #include <vector>
+#include <climits>
 #include <algorithm>
-
 using namespace std;
 
-// Structure to represent an edge in the graph
-struct Edge {
-    int src;
-    int dest;
-    int weight;
+typedef pair<int, int> iPair;
 
-    Edge(int _src, int _dest, int _weight) : src(_src), dest(_dest), weight(_weight) {}
+struct Graph
+{
+    int V;
+    vector<pair<int, iPair>> edges;
+
+    Graph(int V)
+    {
+        this->V = V;
+    }
+
+    void addEdge(int u, int v, int w)
+    {
+        edges.push_back({w, {u, v}});
+    }
+
+    int kruskalMST();
 };
 
-// Find operation for the disjoint set data structure
-int find(vector<int>& parent, int node) {
-    if (parent[node] == node) {
-        return node;
-    }
-    return find(parent, parent[node]);
-}
+struct DisjointSets
+{
+    int *parent, *rnk;
+    int n;
 
-// Union operation for the disjoint set data structure
-void Union(vector<int>& parent, vector<int>& rank, int x, int y) {
-    int xRoot = find(parent, x);
-    int yRoot = find(parent, y);
+    DisjointSets(int n)
+    {
+        this->n = n;
+        parent = new int[n];
+        rnk = new int[n];
 
-    if (rank[xRoot] < rank[yRoot]) {
-        parent[xRoot] = yRoot;
-    } else if (rank[xRoot] > rank[yRoot]) {
-        parent[yRoot] = xRoot;
-    } else {
-        parent[yRoot] = xRoot;
-        rank[xRoot]++;
-    }
-}
-
-// Comparator for sorting edges based on their weights in descending order
-bool compareEdges(const Edge& a, const Edge& b) {
-    return a.weight > b.weight;
-}
-
-// Function to find the maximum spanning weight using Kruskal's algorithm
-int findMaximumSpanningWeight(int numVertices, const vector<Edge>& edges) {
-    vector<int> parent(numVertices);
-    vector<int> rank(numVertices, 0);
-
-    for (int i = 0; i < numVertices; ++i) {
-        parent[i] = i; // Initialize each vertex as a separate disjoint set
-    }
-
-    int maximumSpanningWeight = 0;
-    int edgesIncluded = 0;
-
-    for (const Edge& edge : edges) {
-        int srcRoot = find(parent, edge.src);
-        int destRoot = find(parent, edge.dest);
-
-        if (srcRoot != destRoot) {
-            Union(parent, rank, srcRoot, destRoot);
-            maximumSpanningWeight += edge.weight;
-            edgesIncluded++;
-        }
-
-        // Stop when N-1 edges have been included
-        if (edgesIncluded == numVertices - 1) {
-            break;
+        for (int i = 0; i < n; i++)
+        {
+            rnk[i] = 0;
+            parent[i] = i;
         }
     }
 
-    return maximumSpanningWeight;
+    int find(int u)
+    {
+        if (u != parent[u])
+            parent[u] = find(parent[u]);
+        return parent[u];
+    }
+
+    void merge(int x, int y)
+    {
+        x = find(x), y = find(y);
+
+        if (rnk[x] > rnk[y])
+            parent[y] = x;
+        else
+            parent[x] = y;
+
+        if (rnk[x] == rnk[y])
+            rnk[y]++;
+    }
+};
+
+int Graph::kruskalMST()
+{
+    int mst_wt = 0;
+    sort(edges.rbegin(), edges.rend());
+    DisjointSets ds(V);
+
+    for (auto it = edges.begin(); it != edges.end(); it++)
+    {
+        int u = it->second.first;
+        int v = it->second.second;
+
+        int set_u = ds.find(u);
+        int set_v = ds.find(v);
+
+        if (set_u != set_v)
+        {
+            cout << u << " - " << v << endl;
+            mst_wt += it->first;
+            ds.merge(set_u, set_v);
+        }
+    }
+
+    return mst_wt;
 }
 
-int main() {
-    int numVertices;
-    cout << "Enter the number of vertices in the graph: ";
-    cin >> numVertices;
+int main()
+{
+    int V;
 
-    vector<Edge> edges;
+    cout << "Enter the number of vertices: ";
+    cin >> V;
 
-    cout << "Enter the adjacency matrix or adjacency list of the graph:\n";
-    for (int i = 0; i < numVertices; ++i) {
-        for (int j = 0; j < numVertices; ++j) {
+    Graph g(V);
+
+    cout << "Enter the adjacency matrix (0 for no edge):\n";
+    for (int i = 0; i < V; i++)
+    {
+        for (int j = 0; j < V; j++)
+        {
             int weight;
             cin >> weight;
-
-            if (weight != 0) {
-                edges.push_back(Edge(i, j, weight));
-            }
+            if (weight != 0)
+                g.addEdge(i, j, weight);
         }
     }
 
-    // Sort the edges based on their weights in descending order
-    sort(edges.begin(), edges.end(), compareEdges);
+    cout << "Edges of MST are:\n";
+    int mst_wt = g.kruskalMST();
 
-    int maximumSpanningWeight = findMaximumSpanningWeight(numVertices, edges);
-    cout << "Maximum Spanning Weight: " << maximumSpanningWeight << endl;
+    cout << "\nWeight of MST is " << mst_wt;
 
     return 0;
 }
+
