@@ -1,0 +1,48 @@
+/*
+Ugly numbers
+/*
+#include <iostream>
+using namespace std;
+bool isUgly(int num) {
+    if (num <= 0)
+        return false;
+    
+    while (num % 2 == 0)
+        num /= 2;
+    
+    while (num % 3 == 0)
+        num /= 3;
+    
+    while (num % 5 == 0)
+        num /= 5;
+    
+    return num == 1;
+}
+
+int nthUglyNumber(int n) {
+    int count = 0;
+    int num = 1;
+    
+    while (count < n) {
+        if (isUgly(num))
+            count++;
+        
+        num++;
+    }
+    
+    return num - 1;
+}
+
+int main() {
+    int T;
+    cout<<"Input number of test cases"<<endl;
+    cin >> T;
+    for (int i = 0; i < T; i++) {
+        int n;
+        cout<<"Input number"<<endl;
+        cin >> n;
+        cout<<"Ugly number"<<endl<<nthUglyNumber(n)<<std::endl;
+    }
+
+    return 0;
+}
